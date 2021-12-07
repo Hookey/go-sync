@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option go_package = "example.com/sync/api/pb/syncpb";
+
+package syncpb;
+
+// The cloud API service definition.
+service API {
+  rpc Ls (LsRequest) returns (LsReply) {}
+}
+
+// The request message containing the user's name.
+message LsRequest {
+  string path = 1;
+}
+
+// The response message containing the greetings
+message LsReply {
+  string Lsmessage = 1;
+  string Lserror = 2;
+}
