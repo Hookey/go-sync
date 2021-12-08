@@ -1,9 +1,10 @@
-package dropboxsdk
+package agent
 
 import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -137,7 +138,7 @@ func tokenType(cmd *cobra.Command) string {
 	return tokenPersonal
 }
 
-func InitDbx(cmd *cobra.Command, args []string) (err error) {
+func initDbx(cmd *cobra.Command, args []string) (err error) {
 	verbose, _ := cmd.Flags().GetBool("verbose")
 	asMember, _ := cmd.Flags().GetString("as-member")
 	domain, _ := cmd.Flags().GetString("domain")
@@ -198,32 +199,21 @@ func InitDbx(cmd *cobra.Command, args []string) (err error) {
 	return
 }
 
-// TODO: move RootCmd to DropboxRootCmd
-// RootCmd represents the base command when called without any subcommands
-var RootCmd = &cobra.Command{
-	Use:   "dbxcli",
-	Short: "A command line tool for Dropbox users and team admins",
-	Long: `Use dbxcli to quickly interact with your Dropbox, upload/download files,
+var DbxCmd = &cobra.Command{
+	Use:   "dropbox",
+	Short: "Connect to Dropbox storage",
+	Long: `Use to interact with your Dropbox, upload/download files,
 manage your team and more. It is easy, scriptable and works on all platforms!`,
 	SilenceUsage: true,
-	RunE:         InitDbx,
-	//PersistentPreRunE: InitDbx,
-}
-
-// Execute adds all child commands to the root command sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	if err := RootCmd.Execute(); err != nil {
-		os.Exit(-1)
-	}
+	RunE:         initDbx,
 }
 
 func init() {
-	RootCmd.PersistentFlags().BoolP("verbose", "v", false, "Enable verbose logging")
-	RootCmd.PersistentFlags().String("as-member", "", "Member ID to perform action as")
+	DbxCmd.PersistentFlags().BoolP("verbose", "v", false, "Enable verbose logging")
+	DbxCmd.PersistentFlags().String("as-member", "", "Member ID to perform action as")
 	// This flag should only be used for testing. Marked hidden so it doesn't clutter usage etc.
-	RootCmd.PersistentFlags().String("domain", "", "Override default Dropbox domain, useful for testing")
-	RootCmd.PersistentFlags().MarkHidden("domain")
+	DbxCmd.PersistentFlags().String("domain", "", "Override default Dropbox domain, useful for testing")
+	DbxCmd.PersistentFlags().MarkHidden("domain")
 
 	personalAppKey = getEnv("DROPBOX_PERSONAL_APP_KEY", personalAppKey)
 	personalAppSecret = getEnv("DROPBOX_PERSONAL_APP_SECRET", personalAppSecret)
@@ -231,4 +221,7 @@ func init() {
 	teamAccessAppSecret = getEnv("DROPBOX_TEAM_APP_SECRET", teamAccessAppSecret)
 	teamManageAppKey = getEnv("DROPBOX_MANAGE_APP_KEY", teamManageAppKey)
 	teamManageAppSecret = getEnv("DROPBOX_MANAGE_APP_SECRET", teamAccessAppSecret)
+
+	RootCmd.AddCommand(DbxCmd)
+	log.Printf("dropbox init")
 }

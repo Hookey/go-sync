@@ -104,7 +104,7 @@ func Ls(path string) (err error) {
 		}
 	}
 
-	dbx := files.New(config)
+	dbx := files.New(agent.config)
 
 	res, err := dbx.ListFolder(arg)
 
