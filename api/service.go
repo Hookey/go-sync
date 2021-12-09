@@ -4,8 +4,8 @@ import (
 	"context"
 	"log"
 
-	pb "example.com/sync/api/pb"
-	"example.com/sync/core"
+	pb "github.com/Hookey/go-sync/api/pb"
+	"github.com/Hookey/go-sync/core"
 )
 
 // server is used to implement APIServer

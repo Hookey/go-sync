@@ -14,9 +14,9 @@ import (
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 
-	"example.com/sync/api"
-	pb "example.com/sync/api/pb"
-	"example.com/sync/dropboxsdk"
+	"github.com/Hookey/go-sync/api"
+	pb "github.com/Hookey/go-sync/api/pb"
+	"github.com/Hookey/go-sync/dropboxsdk"
 	"github.com/dropbox/dropbox-sdk-go-unofficial/v6/dropbox"
 	"github.com/dropbox/dropbox-sdk-go-unofficial/v6/dropbox/files"
 	"github.com/mitchellh/go-homedir"

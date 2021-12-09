@@ -1,7 +1,7 @@
 package main
 
 import (
-	"example.com/sync/agent"
+	"github.com/Hookey/go-sync/agent"
 )
 
 func main() {

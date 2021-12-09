@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"example.com/sync/core"
+	"github.com/Hookey/go-sync/core"
 	"github.com/dropbox/dropbox-sdk-go-unofficial/v6/dropbox"
 )
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"example.com/sync/cmd/cli"
+	"github.com/Hookey/go-sync/cmd/cli"
 )
 
 func main() {

@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	pb "example.com/sync/api/pb"
+	pb "github.com/Hookey/go-sync/api/pb"
 	"github.com/spf13/cobra"
 )
 

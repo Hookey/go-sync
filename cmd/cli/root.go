@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	pb "example.com/sync/api/pb"
+	pb "github.com/Hookey/go-sync/api/pb"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 )

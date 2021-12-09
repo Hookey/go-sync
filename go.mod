@@ -1,4 +1,4 @@
-module example.com/sync
+module github.com/Hookey/go-sync
 
 go 1.17
 
