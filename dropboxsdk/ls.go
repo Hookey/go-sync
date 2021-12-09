@@ -85,7 +85,7 @@ func SetPathDisplayAsDeleted(metadata files.IsMetadata) {
 	}
 }
 
-func Ls(path string) (err error) {
+func (d *Dropbox) Ls(path string) (err error) {
 	if path, err = validatePath(path); err != nil {
 		return err
 	}
@@ -104,7 +104,7 @@ func Ls(path string) (err error) {
 		}
 	}
 
-	dbx := files.New(agent.config)
+	dbx := files.New(d.Config)
 
 	res, err := dbx.ListFolder(arg)
 

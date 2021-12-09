@@ -5,13 +5,18 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
 
 	"golang.org/x/oauth2"
+	"google.golang.org/grpc"
 
+	"example.com/sync/api"
+	pb "example.com/sync/api/pb"
+	"example.com/sync/dropboxsdk"
 	"github.com/dropbox/dropbox-sdk-go-unofficial/v6/dropbox"
 	"github.com/dropbox/dropbox-sdk-go-unofficial/v6/dropbox/files"
 	"github.com/mitchellh/go-homedir"
@@ -48,7 +53,7 @@ var (
 // command type: personal, team access and team manage
 type TokenMap map[string]map[string]string
 
-var config dropbox.Config
+var dbx dropboxsdk.Dropbox
 
 func oauthConfig(tokenType string, domain string) *oauth2.Config {
 	var appKey, appSecret string
@@ -185,7 +190,8 @@ func initDbx(cmd *cobra.Command, args []string) (err error) {
 	if verbose {
 		logLevel = dropbox.LogInfo
 	}
-	config = dropbox.Config{
+
+	dbx.Config = dropbox.Config{
 		Token:           tokens[tokType],
 		LogLevel:        logLevel,
 		Logger:          nil,
@@ -199,6 +205,23 @@ func initDbx(cmd *cobra.Command, args []string) (err error) {
 	return
 }
 
+func runServer(cmd *cobra.Command, args []string) error {
+	port, _ := cmd.Flags().GetString("port")
+	lis, err := net.Listen("tcp", port)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer()
+	pb.RegisterAPIServer(s, &api.Service{Storage: &dbx})
+
+	log.Printf("server listening at %v", lis.Addr())
+
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+	return nil
+}
+
 var DbxCmd = &cobra.Command{
 	Use:   "dropbox",
 	Short: "Connect to Dropbox storage",
@@ -206,6 +229,7 @@ var DbxCmd = &cobra.Command{
 manage your team and more. It is easy, scriptable and works on all platforms!`,
 	SilenceUsage: true,
 	RunE:         initDbx,
+	PostRunE:     runServer,
 }
 
 func init() {
