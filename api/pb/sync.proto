@@ -7,15 +7,25 @@ package syncpb;
 // The cloud API service definition.
 service API {
   rpc Ls (LsRequest) returns (LsReply) {}
+  rpc Put (PutRequest) returns (PutReply) {}
 }
 
-// The request message containing the user's name.
+// The request message containing the Ls'ed path.
 message LsRequest {
   string path = 1;
 }
 
-// The response message containing the greetings
+// The response message containing the ls result
 message LsReply {
-  string Lsmessage = 1;
-  string Lserror = 2;
+  string result = 1;
 }
+
+// The request message containing the local:src, cloud:dst path.
+message PutRequest {
+  string src = 1;
+  string dst = 2;
+}
+
+message PutReply {
+}
+

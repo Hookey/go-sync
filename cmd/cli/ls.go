@@ -30,7 +30,7 @@ func ls(cmd *cobra.Command, args []string) (err error) {
 	if r, err := c.Ls(ctx, &pb.LsRequest{Path: path}); err != nil {
 		log.Fatalf("could not ls: %v", err)
 	} else {
-		log.Printf("ls: %s", r.GetLsmessage())
+		log.Printf("ls: %s", r.GetResult())
 	}
 
 	return err
