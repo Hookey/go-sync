@@ -3,6 +3,7 @@ package core
 type Storage interface {
 	Ls(path string) (err error)
 	Put(src, dst string) (err error)
+	Get(src, dst string) (err error)
 	//Init() error
 }
 

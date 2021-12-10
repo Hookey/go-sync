@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type APIClient interface {
 	Ls(ctx context.Context, in *LsRequest, opts ...grpc.CallOption) (*LsReply, error)
 	Put(ctx context.Context, in *PutRequest, opts ...grpc.CallOption) (*PutReply, error)
+	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetReply, error)
 }
 
 type aPIClient struct {
@@ -48,12 +49,22 @@ func (c *aPIClient) Put(ctx context.Context, in *PutRequest, opts ...grpc.CallOp
 	return out, nil
 }
 
+func (c *aPIClient) Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetReply, error) {
+	out := new(GetReply)
+	err := c.cc.Invoke(ctx, "/syncpb.API/Get", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // APIServer is the server API for API service.
 // All implementations must embed UnimplementedAPIServer
 // for forward compatibility
 type APIServer interface {
 	Ls(context.Context, *LsRequest) (*LsReply, error)
 	Put(context.Context, *PutRequest) (*PutReply, error)
+	Get(context.Context, *GetRequest) (*GetReply, error)
 	mustEmbedUnimplementedAPIServer()
 }
 
@@ -66,6 +77,9 @@ func (UnimplementedAPIServer) Ls(context.Context, *LsRequest) (*LsReply, error) 
 }
 func (UnimplementedAPIServer) Put(context.Context, *PutRequest) (*PutReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Put not implemented")
+}
+func (UnimplementedAPIServer) Get(context.Context, *GetRequest) (*GetReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedAPIServer) mustEmbedUnimplementedAPIServer() {}
 
@@ -116,6 +130,24 @@ func _API_Put_Handler(srv interface{}, ctx context.Context, dec func(interface{}
 	return interceptor(ctx, in, info, handler)
 }
 
+func _API_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/syncpb.API/Get",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServer).Get(ctx, req.(*GetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // API_ServiceDesc is the grpc.ServiceDesc for API service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -130,6 +162,10 @@ var API_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Put",
 			Handler:    _API_Put_Handler,
+		},
+		{
+			MethodName: "Get",
+			Handler:    _API_Get_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

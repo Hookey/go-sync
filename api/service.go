@@ -29,3 +29,13 @@ func (s *Service) Put(ctx context.Context, in *pb.PutRequest) (*pb.PutReply, err
 	//log.Printf("Received: %v", in.GetPath())
 	return &pb.PutReply{}, err
 }
+
+func (s *Service) Get(ctx context.Context, in *pb.GetRequest) (*pb.GetReply, error) {
+	src := in.GetSrc()
+	dst := in.GetDst()
+	//workers := in.GetWorkers()
+	//chunksize := in.GetChunksize()
+	err := s.Storage.Get(src, dst)
+	//log.Printf("Received: %v", in.GetPath())
+	return &pb.GetReply{}, err
+}

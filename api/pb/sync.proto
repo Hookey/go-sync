@@ -8,6 +8,7 @@ package syncpb;
 service API {
   rpc Ls (LsRequest) returns (LsReply) {}
   rpc Put (PutRequest) returns (PutReply) {}
+  rpc Get (GetRequest) returns (GetReply) {}
 }
 
 // The request message containing the Ls'ed path.
@@ -27,5 +28,14 @@ message PutRequest {
 }
 
 message PutReply {
+}
+
+// The request message containing the cloud:src, local:dst path.
+message GetRequest {
+  string src = 1;
+  string dst = 2;
+}
+
+message GetReply {
 }
 
