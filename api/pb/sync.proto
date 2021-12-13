@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "example.com/sync/api/pb/syncpb";
+option go_package = "github.com/Hookey/go-sync/api/pb/syncpb";
 
 package syncpb;
 
